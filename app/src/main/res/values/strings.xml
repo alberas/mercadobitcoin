@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Mercado Bitcoin</string>
+    <string name="pesquisar">Pesquisar</string>
+    <string name="exibirDocumento">Exibir Documento</string>
+</resources>
