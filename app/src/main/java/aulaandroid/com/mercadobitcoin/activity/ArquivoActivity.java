@@ -78,45 +78,52 @@ public class ArquivoActivity extends AppCompatActivity {
     }
 
     public void onClickSalvar(View view){
-        Call<String> result = IKHONConfig.getService().obterArquivo("3847537");
 
-        result.enqueue(new Callback<String>(){
-            @Override
-            public void onResponse(Call<String> call, Response<String> response){
+        if (Util.validate(ArquivoActivity.this, 0, new String[]{
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_EXTERNAL_STORAGE})) {
 
-                try {
-                    //final File dwldsPath = new java.io.File((ArquivoActivity.this
-                    //     .getApplicationContext().getFileStreamPath("Documento.pdf")
-                    //        .getPath()));
+            Call<String> result = IKHONConfig.getService().obterArquivo("3847537");
 
-                    final File dwldsPath = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/documento.pdf");
-                    byte[] pdfAsBytes = Base64.decode(response.body().toString(), 0);
-                    FileOutputStream os;
-                    os = new FileOutputStream(dwldsPath, false);
-                    os.write(pdfAsBytes);
-                    os.flush();
-                    os.close();
+            result.enqueue(new Callback<String>(){
+                @Override
+                public void onResponse(Call<String> call, Response<String> response){
 
-                    Intent target = new Intent(Intent.ACTION_VIEW);
-                    Uri fileURI = FileProvider.getUriForFile(ArquivoActivity.this, ArquivoActivity.this.getApplicationContext().getPackageName() + ".aulaandroid.com.mercadobitcoin", dwldsPath);
-                    target.setDataAndType(fileURI,"application/pdf");
-                    target.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-
-                    Intent intent = Intent.createChooser(target, "Open File");
                     try {
-                        startActivity(intent);
-                    } catch (ActivityNotFoundException e) {
-                        // Instruct the user to install a PDF reader here, or som
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+                        //final File dwldsPath = new java.io.File((ArquivoActivity.this
+                        //     .getApplicationContext().getFileStreamPath("Documento.pdf")
+                        //        .getPath()));
 
-            @Override
-            public void onFailure(Call<String> call, Throwable t){
-                Toast.makeText(getBaseContext(), "Erro ao buscar cotação", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
+                        final File dwldsPath = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/documento.pdf");
+                        byte[] pdfAsBytes = Base64.decode(response.body().toString(), 0);
+                        FileOutputStream os;
+                        os = new FileOutputStream(dwldsPath, false);
+                        os.write(pdfAsBytes);
+                        os.flush();
+                        os.close();
+
+                        Intent target = new Intent(Intent.ACTION_VIEW);
+                        Uri fileURI = FileProvider.getUriForFile(ArquivoActivity.this, ArquivoActivity.this.getApplicationContext().getPackageName() + ".aulaandroid.com.mercadobitcoin", dwldsPath);
+                        target.setDataAndType(fileURI,"application/pdf");
+                        target.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+                        Intent intent = Intent.createChooser(target, "Open File");
+                        try {
+                            startActivity(intent);
+                        } catch (ActivityNotFoundException e) {
+                            // Instruct the user to install a PDF reader here, or som
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<String> call, Throwable t){
+                    Toast.makeText(getBaseContext(), "Erro ao buscar cotação", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+        }
+
 }

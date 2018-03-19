@@ -3,8 +3,8 @@
     package="aulaandroid.com.mercadobitcoin">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <application
         android:allowBackup="true"
